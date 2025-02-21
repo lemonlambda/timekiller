@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7l0drif4m547"]
+
+[ext_resource type="PackedScene" uid="uid://bbturf0ecawgs" path="res://Scenes/Terminal.tscn" id="1_hbin1"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Terminal" parent="." instance=ExtResource("1_hbin1")]
+offset_right = 1920.0
+offset_bottom = 1080.0
