@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://bbturf0ecawgs"]
+[gd_scene load_steps=6 format=3 uid="uid://bbturf0ecawgs"]
 
 [ext_resource type="FontFile" uid="uid://bxw8t4tfxe5ud" path="res://Assets/VT323-Regular.ttf" id="1_8lpy6"]
+[ext_resource type="Theme" uid="uid://diin14q6q70bd" path="res://Assets/Black.tres" id="1_wqolr"]
 [ext_resource type="Script" path="res://Scripts/Terminal.cs" id="2_k6k5e"]
+[ext_resource type="Texture2D" uid="uid://bnqqgbwe38txj" path="res://Assets/stellatedoctahedron.png" id="4_gs4qn"]
 
 [sub_resource type="Theme" id="Theme_7kmc6"]
 default_font = ExtResource("1_8lpy6")
+RichTextLabel/font_sizes/normal_font_size = 50
+RichTextLabel/fonts/normal_font = ExtResource("1_8lpy6")
 
 [node name="Terminal" type="Control"]
 layout_mode = 3
@@ -24,6 +28,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_wqolr")
 metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel"]
@@ -40,13 +45,16 @@ grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="Terminal" type="RichTextLabel" parent="Panel/MarginContainer"]
+z_index = 1
 clip_contents = false
 layout_mode = 2
 theme = SubResource("Theme_7kmc6")
-theme_override_font_sizes/mono_font_size = 50
-theme_override_font_sizes/normal_font_size = 50
 text = "?> "
 scroll_active = false
 scroll_following = true
 shortcut_keys_enabled = false
 script = ExtResource("2_k6k5e")
+
+[node name="Sprite2D" type="Sprite2D" parent="Panel"]
+position = Vector2(960, 540)
+texture = ExtResource("4_gs4qn")

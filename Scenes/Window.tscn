@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxp6i78m0uy4g"]
+
+[ext_resource type="Theme" uid="uid://bmjg2kaogr26n" path="res://Assets/DarkGrey.tres" id="1_xyi2j"]
+[ext_resource type="Theme" uid="uid://4nvubibd1vjc" path="res://Assets/LightGray.tres" id="2_ytlr2"]
+
+[node name="Window" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 25.0
+offset_right = 1895.0
+offset_bottom = 1055.0
+theme = ExtResource("1_xyi2j")
+
+[node name="Panel" type="Panel" parent="Panel"]
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 1840.0
+offset_bottom = 1000.0
+theme = ExtResource("2_ytlr2")
+
+[node name="Button" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.004
+offset_left = 194.0
+offset_top = -144.0
+offset_right = 266.52
+offset_bottom = -64.0
