@@ -16,7 +16,11 @@ namespace Timekiller {
 			switch (commandName) {
 				case "":
 					break;
+				case "clear":
+					this.Text = "";
+					break;
 				case "exit": 
+					// This quits the game
 					GetTree().Quit();
 					break;
 				default:
