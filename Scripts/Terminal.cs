@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+using Timekiller.StateManager;
+
 namespace Timekiller {
 	public partial class Terminal : RichTextLabel
 	{
@@ -19,6 +21,26 @@ namespace Timekiller {
 				case "clear":
 					this.Text = "";
 					break;
+				case "examine":
+					if (args.Length < 1) {
+						this.PrintLn("No args provided, can't examine.");
+						break;
+					}
+
+					switch (args[0]) {
+						case "self":
+							this.PrintLn("== You ==");
+							this.PrintLn($"Coords: You don't exist");
+							break;
+						case "solarsystem":
+							this.PrintLn("I'm gonna die");
+							break;
+						default:
+							this.PrintLn($"You can't examine {args[0]}.");
+							break;
+					}
+
+					break;
 				case "exit": 
 					// This quits the game
 					GetTree().Quit();
@@ -30,9 +52,13 @@ namespace Timekiller {
 		}
 	
 		public override void _Input(InputEvent @event) {
+			string[] lines = this.Text.Split("\n");
+			if (lines.Length > 22) {
+				this.Text = string.Join("\n", lines[1..]);
+			}
+			
+			string current_line = lines[lines.Length-1];
 			if (@event is InputEventKey keyEvent && keyEvent.Pressed) {
-				string[] lines = this.Text.Split("\n");
-				string current_line = lines[lines.Length-1];
 
 				switch (keyEvent.Keycode) {
 					case Key.Backspace:
@@ -44,8 +70,8 @@ namespace Timekiller {
 						this.Print("\n");
 						string[] values = current_line.Split(" ");
 						string commandName = values[1];
-						string[] args = new string[0];
-						if (values.Length > 3) {
+						string[] args = new string[values.Length-2];
+						if (values.Length > 2) {
 							args = values[2..];
 						}
 
@@ -57,10 +83,6 @@ namespace Timekiller {
 						this.Print(((char)keyEvent.Unicode).ToString());
 						break;
 				}
-
-				if (keyEvent.Keycode == Key.Backspace) {
-				}
-			
 			}
 		}
 	

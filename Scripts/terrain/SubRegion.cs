@@ -6,7 +6,7 @@ namespace Timekiller.Terrain {
 		public int ID;
 		public Plot[] Plots;
 
-		public SubRegion(int ID) {
+		public SubRegion(int id) {
 			this.ID = id;
 			this.Plots = new Plot[0];
 		}
