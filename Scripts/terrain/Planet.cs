@@ -1,18 +1,16 @@
 using Godot;
 using System;
 
-using Timekiller.StateManager;
-
 namespace Timekiller.Terrain {
 	public partial class Planet : GodotObject {
-		public int gid;
-		public string name;
-		public Region[] regions;
+		public int ID;
+		public string Name;
+		public Region[] Regions;
 
-		public Planet(string planet_name) {
-			this.gid = Manager.GetNewGID();
-			this.name = planet_name;
-			this.regions = new Region[0];
+		public Planet(int id, string planetName) {
+			this.ID = id;
+			this.Name = planetName;
+			this.Regions = new Region[0];
 		}
 	}
 }

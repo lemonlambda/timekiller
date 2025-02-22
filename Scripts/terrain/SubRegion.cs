@@ -3,12 +3,12 @@ using System;
 
 namespace Timekiller.Terrain {
 	public partial class SubRegion {
-		public int id;
-		public Plot[] plots;
+		public int ID;
+		public Plot[] Plots;
 
-		public SubRegion(int id) {
-			this.id = id;
-			this.plots = new Plot[0];
+		public SubRegion(int ID) {
+			this.ID = id;
+			this.Plots = new Plot[0];
 		}
 	}
 }

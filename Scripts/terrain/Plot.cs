@@ -3,10 +3,10 @@ using System;
 
 namespace Timekiller.Terrain {
 	public partial class Plot {
-		public int id;
+		public int ID;
 
 		public Plot(int id) {
-			this.id = id;
+			this.ID = id;
 		}
 	}
 }
