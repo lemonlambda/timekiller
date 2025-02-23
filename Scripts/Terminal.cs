@@ -5,8 +5,9 @@ using System.Linq;
 using Timekiller.StateManager;
 
 namespace Timekiller {
-	public partial class Terminal : RichTextLabel
-	{
+	public partial class Terminal : RichTextLabel {
+		private CommandManager commandManager = new CommandManager();
+	
 		public void PrintLn(string content) {
 			this.Text += content + "\n";
 		}
@@ -15,43 +16,39 @@ namespace Timekiller {
 			this.Text += content;
 		}
 
-		private void ProcessCommand(string commandName, string[] args) {
-			switch (commandName) {
-				case "":
-					break;
-				case "clear":
-					this.Text = "";
-					break;
-				case "window":
-					GetTree().Root.GetNode<Control>("Main/Window").Visible = true;
-					break;
-				case "examine":
-					if (args.Length < 1) {
-						this.PrintLn("No args provided, can't examine.");
+		public override void _Ready() {
+			this.commandManager.RegisterCommand("", null, (_) => { return; }, true);
+			this.commandManager.RegisterCommand("clear", "Clears the screen of all text.", (_) => { this.Text = ""; }, false);
+			this.commandManager.RegisterCommand("examine", "Examines a thing. Takes one arg.", (args) => {
+				if (args.Length < 1) {
+					this.PrintLn("No args provided, can't examine.");
+					return;
+				}
+
+				switch (args[0]) {
+					case "self":
+						this.PrintLn("== You ==");
+						this.PrintLn($"Coords: You don't exist");
 						break;
-					}
+					case "solarsystem":
+						this.PrintLn($"System: {string.Join(", ", Manager.Systems[0].Planets.Select(planet => planet.Name))}");
+						break;
+					default:
+						this.PrintLn($"You can't examine {args[0]}.");
+						break;
+				}
+			}, false);
+			this.commandManager.RegisterCommand("exit", "Exits the terminal.", (_) => { GetTree().Quit(); }, false);
+			this.commandManager.RegisterCommand("help", "Gets help", (_) => {
+				this.PrintLn(this.commandManager.GetHelp());
+			}, true);
+		}
 
-					switch (args[0]) {
-						case "self":
-							this.PrintLn("== You ==");
-							this.PrintLn($"Coords: You don't exist");
-							break;
-						case "solarsystem":
-							this.PrintLn($"System: {string.Join(", ", Manager.Systems[0].Planets.Select(planet => planet.Name))}");
-							break;
-						default:
-							this.PrintLn($"You can't examine {args[0]}.");
-							break;
-					}
-
-					break;
-				case "exit": 
-					// This quits the game
-					GetTree().Quit();
-					break;
-				default:
-					this.PrintLn($"Command {commandName} is unrecognized.");
-					break;
+		private void ProcessCommand(string commandName, string[] args) {
+			try {
+				this.commandManager.ProcessCommand(commandName, args);
+			} catch (CommandManagerError ex) {
+				this.PrintLn(ex.Message);
 			}
 		}
 	
