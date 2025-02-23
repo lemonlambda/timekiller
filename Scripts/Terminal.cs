@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 using Timekiller.StateManager;
 
@@ -36,7 +37,7 @@ namespace Timekiller {
 							this.PrintLn($"Coords: You don't exist");
 							break;
 						case "solarsystem":
-							this.PrintLn("I'm gonna die");
+							this.PrintLn($"System: {string.Join(", ", Manager.Systems[0].Planets.Select(planet => planet.Name))}");
 							break;
 						default:
 							this.PrintLn($"You can't examine {args[0]}.");

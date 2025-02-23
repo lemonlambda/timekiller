@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 using Timekiller.Helpers;
 using Timekiller.StateManager;
@@ -13,7 +14,9 @@ namespace Timekiller.Terrain {
 		public SolarSystem() {
 			this.GID = Manager.GetNewGID();
 			this.Name = UniqueName.GenerateUniqueSystemName();
-			this.Planets = new Planet[0];
+			Random r = new Random();
+			int numberOfPlanets = r.Next(0, 5);
+			this.Planets = Enumerable.Range(0, numberOfPlanets).Select(id => new Planet(id, $"{this.Name}{(char)('a' + id)}")).ToArray();
 		}
 	}
 }
