@@ -5,7 +5,7 @@ using Timekiller.Terrain;
 
 namespace Timekiller.StateManager {
 	public static class Manager {
-		public static SolarSystem[] Systems = new SolarSystem[1]{new SolarSystem()};
+		public static SolarSystem[] Systems = new SolarSystem[1]{new SolarSystem("Zavka-", (int?)3)};
 	
 		private static int gid = 0;
 

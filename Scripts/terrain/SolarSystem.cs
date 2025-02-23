@@ -1,3 +1,4 @@
+#nullable enable
 using Godot;
 using System;
 using System.Linq;
@@ -11,11 +12,11 @@ namespace Timekiller.Terrain {
 		public string Name;
 		public Planet[] Planets;
 
-		public SolarSystem() {
+		public SolarSystem(string? name, int? planetCount) {
 			this.GID = Manager.GetNewGID();
-			this.Name = UniqueName.GenerateUniqueSystemName();
+			this.Name = name ?? UniqueName.GenerateUniqueSystemName();
 			Random r = new Random();
-			int numberOfPlanets = r.Next(0, 5);
+			int numberOfPlanets = planetCount ?? r.Next();
 			this.Planets = Enumerable.Range(0, numberOfPlanets).Select(id => new Planet(id, $"{this.Name}{(char)('a' + id)}")).ToArray();
 		}
 	}
