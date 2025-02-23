@@ -26,7 +26,7 @@ namespace Timekiller {
 			if (!(function is null)) {
 				this.commands.Add(name, function);
 			}
-			if (!hidden || !(description is null)) {
+			if (!hidden && !(description is null)) {
 				this.commandDescriptions.Add(name, description!);
 			}
 		}
