@@ -1,7 +1,15 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://diin14q6q70bd"]
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://diin14q6q70bd"]
+
+[ext_resource type="FontFile" uid="uid://bxw8t4tfxe5ud" path="res://Assets/VT323-Regular.ttf" id="1_cla3a"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iw605"]
+bg_color = Color(0.101961, 0.101961, 0.101961, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5k7kj"]
-bg_color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+bg_color = Color(0.103744, 0.103744, 0.103743, 1)
 
 [resource]
+Button/font_sizes/font_size = 30
+Button/fonts/font = ExtResource("1_cla3a")
+Button/styles/normal = SubResource("StyleBoxFlat_iw605")
 Panel/styles/panel = SubResource("StyleBoxFlat_5k7kj")

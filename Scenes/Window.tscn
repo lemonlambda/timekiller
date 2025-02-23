@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://cxp6i78m0uy4g"]
+[gd_scene load_steps=6 format=3 uid="uid://cxp6i78m0uy4g"]
 
 [ext_resource type="Theme" uid="uid://bmjg2kaogr26n" path="res://Assets/DarkGrey.tres" id="1_xyi2j"]
 [ext_resource type="Theme" uid="uid://4nvubibd1vjc" path="res://Assets/LightGray.tres" id="2_ytlr2"]
+[ext_resource type="Theme" uid="uid://diin14q6q70bd" path="res://Assets/Black.tres" id="3_2aogr"]
+[ext_resource type="Script" path="res://Scripts/CloseWindow.cs" id="4_sf4dx"]
+[ext_resource type="Texture2D" uid="uid://bnqqgbwe38txj" path="res://Assets/stellatedoctahedron.png" id="5_q2dt4"]
 
 [node name="Window" type="Control"]
+z_index = 2
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +34,14 @@ theme = ExtResource("2_ytlr2")
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.004
-offset_left = 194.0
-offset_top = -144.0
-offset_right = 266.52
-offset_bottom = -64.0
+offset_left = 1840.0
+offset_right = 1862.52
+offset_bottom = 30.0
+theme = ExtResource("3_2aogr")
+action_mode = 0
+text = "X"
+script = ExtResource("4_sf4dx")
+
+[node name="Sprite2D" type="Sprite2D" parent="Panel"]
+position = Vector2(960, 540)
+texture = ExtResource("5_q2dt4")

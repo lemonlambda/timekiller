@@ -1,14 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://b7l0drif4m547"]
+[gd_scene load_steps=5 format=3 uid="uid://b7l0drif4m547"]
 
 [ext_resource type="PackedScene" uid="uid://bbturf0ecawgs" path="res://Scenes/Terminal.tscn" id="1_hbin1"]
 [ext_resource type="Shader" path="res://Assets/NewCRTShader.gdshader" id="2_2mjop"]
+[ext_resource type="PackedScene" uid="uid://cxp6i78m0uy4g" path="res://Scenes/Window.tscn" id="3_asxpe"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_v7lc3"]
 shader = ExtResource("2_2mjop")
 shader_parameter/resolution = Vector2(1920, 180)
 shader_parameter/pixel_density = 1.5
 shader_parameter/scan_line_amount = 2.0
-shader_parameter/warp_amount = 0.1
+shader_parameter/warp_amount = 0.0
 shader_parameter/noise_amount = 0.0
 shader_parameter/interference_amount = 0.0
 shader_parameter/grille_amount = 0.05
@@ -23,11 +24,16 @@ shader_parameter/pixel_strength = -1.5
 
 [node name="Main" type="Node2D"]
 
-[node name="Terminal" parent="." instance=ExtResource("1_hbin1")]
-offset_right = 1920.0
-offset_bottom = 1080.0
-
 [node name="CRTShader" type="Panel" parent="."]
+z_index = 4096
 material = SubResource("ShaderMaterial_v7lc3")
 offset_right = 1920.0
 offset_bottom = 1080.0
+
+[node name="Terminal" parent="." instance=ExtResource("1_hbin1")]
+z_index = 1
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="Window" parent="." instance=ExtResource("3_asxpe")]
+visible = false

@@ -21,6 +21,9 @@ namespace Timekiller {
 				case "clear":
 					this.Text = "";
 					break;
+				case "window":
+					GetTree().Root.GetNode<Control>("Main/Window").Visible = true;
+					break;
 				case "examine":
 					if (args.Length < 1) {
 						this.PrintLn("No args provided, can't examine.");
