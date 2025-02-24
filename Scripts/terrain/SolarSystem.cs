@@ -12,12 +12,12 @@ namespace Timekiller.Terrain {
 		public string Name;
 		public Planet[] Planets;
 
-		public SolarSystem(string? name, int? planetCount) {
+		public SolarSystem(string? name = null, int? planetCount = null) {
 			this.GID = Manager.GetNewGID();
 			this.Name = name ?? UniqueName.GenerateUniqueSystemName();
 			Random r = new Random();
-			int numberOfPlanets = planetCount ?? r.Next();
-			this.Planets = Enumerable.Range(0, numberOfPlanets).Select(id => new Planet(id, $"{this.Name}{(char)('a' + id)}")).ToArray();
+			int numberOfPlanets = planetCount ?? r.Next(1, 5);
+			this.Planets = Enumerable.Range(0, numberOfPlanets).Select(id => new Planet(id, $"{this.Name} {(char)('b' + id)}")).ToArray();
 		}
 	}
 }

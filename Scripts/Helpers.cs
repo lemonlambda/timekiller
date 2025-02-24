@@ -1,18 +1,49 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Timekiller.Helpers {
 	public static class UniqueName {
 		private static HashSet<string> usedNames = new HashSet<string>();
-		private static string[] names = new string[100]{"Aether", "Vesper", "Nova", "Orion", "Altara", "Zenith", "Draco", "Lyra", "Seraph", "Solis", "Vega", "Lyrae", "Nexus", "Obsidian", "Andromeda", "Cassiopeia", "Orionis", "Phoenix", "Aquila", "Astra", "Zenithar", "Pyris", "Nebula", "Vulcan", "Celestia", "Helios", "Hydra", "Luna", "Eclipse", "Vortex", "Astrae", "Titan", "Quasar", "Exo", "Astraeus", "Helios", "Titanus", "Regalis", "Equinox", "Nebulon", "Solaris", "Hypnos", "Quanta", "Cosmos", "Scorpius", "Equinox", "Cygnet", "Polaris", "Andara", "Draconis", "Regalus", "Stellaris", "Phoenixus", "Auralis", "Velaris", "Caelus", "Spectra", "Chronos", "Galaxion", "Astraon", "Aethon", "Triton", "Zephyr", "Alpha", "Neptus", "Titania", "Borealis", "Empyrean", "Andros", "Thalasson", "Lyricon", "Solis", "Pyron", "Elysium", "Nexon", "Arcturus", "Stratos", "Aquarion", "Umbra", "Syphera", "Seraphis", "Helion", "Ignis", "Apollon", "Auron", "Stellon", "Calypso", "Lunaris", "Galaxar", "Corae", "Obsidian", "Epsilon", "Eldora", "Meteoris", "Astrolis", "Syntaris", "Venora", "Radion", "Altura", "Pyros"};
-		
+	    private static readonly string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "qu", "r", "s", "t", "v", "w", "x", "y", "z" };
+	    private static readonly string[] vowels = { "a", "e", "i", "o", "u", "y" };
+	    private static readonly string[] vowelPairs = { "ae", "ai", "au", "ea", "ee", "ei", "ie", "io", "oa", "oe", "oi", "ou", "ue" };
+	    private static readonly string[] consonantClusters = { "bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "sl", "sm", "sn", "sp", "st", "sw", "tr", "tw", "wh", "wr" };
+
+	    public static string GenerateStarName(int minLength = 5, int maxLength = 9)
+	    {
+	        Random rand = new Random();
+	        int length = rand.Next(minLength, maxLength + 1);
+	        bool useConsonant = rand.Next(0, 2) == 0;
+	        string name = "";
+
+	        while (name.Length < length)
+	        {
+	            if (useConsonant && rand.NextDouble() < 0.3 && name.Length <= length - 2)
+	            {
+	                name += consonantClusters[rand.Next(consonantClusters.Length)];
+	            }
+	            else if (!useConsonant && rand.NextDouble() < 0.4 && name.Length <= length - 2)
+	            {
+	                name += vowelPairs[rand.Next(vowelPairs.Length)];
+	            }
+	            else
+	            {
+	                name += useConsonant ? consonants[rand.Next(consonants.Length)] : vowels[rand.Next(vowels.Length)];
+	            }
+	            useConsonant = !useConsonant;
+	        }
+
+	        name = name.Substring(0, Math.Min(name.Length, length));
+	        return char.ToUpper(name[0]) + name.Substring(1);
+	    }
+						
 		public static string GenerateUniqueSystemName() {
-			Random r = new Random();
 		
 			while (true) {
-				int idx = r.Next(0, names.Length-1);
-				string name = names[idx];
+				string name = GenerateStarName();
+				Random r = new Random();
 				int number = r.Next(0, 99);
 				string systemName = $"{name}-{number.ToString()}";
 				

@@ -26,7 +26,6 @@ scale = Vector2(2.109, 2.109)
 texture = ExtResource("2_eyjg5")
 
 [node name="Planet" type="Sprite2D" parent="."]
-visible = false
 position = Vector2(666, 521)
 scale = Vector2(0.318359, 0.318359)
 texture = ExtResource("3_vqw5t")
