@@ -1,24 +1,75 @@
 using Godot;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using Timekiller.StateManager;
 
 namespace Timekiller {
 	public partial class Terminal : RichTextLabel {
 		private CommandManager commandManager = new CommandManager();
-	
-		public void PrintLn(string content) {
-			this.Text += content + "\n";
+		private List<(string, string)> commandHistory = new List<(string, string)>();
+		private int commandUp = 0;
+
+		public void Type(string content) {
+			int idx = this.commandHistory.Count - 1;
+			(string, string) currentCommand = this.commandHistory[idx];
+
+			currentCommand.Item1 += content;
+
+			this.commandHistory[idx] = currentCommand;
+		}
+
+		public void ReplaceType(string content) {
+			int idx = this.commandHistory.Count - 1;
+			(string, string) currentCommand = this.commandHistory[idx];
+
+			currentCommand.Item1 = content;
+
+			this.commandHistory[idx] = currentCommand;
+		}
+
+		public void Backspace() {
+			int idx = this.commandHistory.Count - 1;
+			(string, string) currentCommand = this.commandHistory[idx];
+		
+			if (currentCommand.Item1.Length > 0) {
+				currentCommand.Item1 = currentCommand.Item1.Remove(currentCommand.Item1.Length - 1);
+			}
+
+			this.commandHistory[idx] = currentCommand;
 		}
 	
 		public void Print(string content) {
-			this.Text += content;
+			int idx = this.commandHistory.Count - 1;
+			(string, string) currentCommand = this.commandHistory[idx];
+
+			currentCommand.Item2 += content;
+
+			this.commandHistory[idx] = currentCommand;
+		}
+
+		public void PrintLn(string content) {
+			this.Print(content);
+			this.Print("\n");
+		}
+	
+		public new void Clear() {
+			this.commandHistory = new List<(string, string)>();
+			this.commandHistory.Add(("", ""));
+		}
+
+		// Construct the Text out of commandHistory
+		public void Flush() {
+			Func<(string, string), string> newline = command => (command.Item2 == "") ? "" : "\n";
+			this.Text = string.Join("", this.commandHistory.Select(command => $"?> {command.Item1}{newline(command)}{command.Item2}"));
 		}
 
 		public override void _Ready() {
 			this.commandManager.RegisterCommand("", null, (_) => { return; }, true);
-			this.commandManager.RegisterCommand("clear", "Clears the screen of all text.", (_) => { this.Text = ""; }, false);
+			this.commandManager.RegisterCommand("clear", "Clears the screen of all text.", (_) => { 
+				this.Clear();
+			}, false);
 			this.commandManager.RegisterCommand("examine", "Examines a thing. Takes one arg.", (args) => {
 				if (args.Length < 1) {
 					this.PrintLn("No args provided, can't examine.");
@@ -31,7 +82,7 @@ namespace Timekiller {
 						this.PrintLn($"Coords: You don't exist");
 						break;
 					case "solarsystem":
-						this.PrintLn($"System: {string.Join(", ", Manager.Systems[0].Planets.Select(planet => planet.Name))}");
+						this.PrintLn($"System: {string.Join(", ", Manager.Systems[Int32.Parse(args[1])].Planets.Select(planet => planet.Name))}");
 						break;
 					default:
 						this.PrintLn($"You can't examine {args[0]}.");
@@ -39,9 +90,10 @@ namespace Timekiller {
 				}
 			}, false);
 			this.commandManager.RegisterCommand("exit", "Exits the terminal.", (_) => { GetTree().Quit(); }, false);
-			this.commandManager.RegisterCommand("help", "Gets help", (_) => {
+			this.commandManager.RegisterCommand("man", "Gets help", (_) => {
 				this.PrintLn(this.commandManager.GetHelp());
-			}, true);
+			}, false);
+			this.commandHistory.Add(("", ""));
 		}
 
 		private void ProcessCommand(string commandName, string[] args) {
@@ -51,41 +103,59 @@ namespace Timekiller {
 				this.PrintLn(ex.Message);
 			}
 		}
-	
-		public override void _Input(InputEvent @event) {
-			string[] lines = this.Text.Split("\n");
-			if (lines.Length > 22) {
-				this.Text = string.Join("\n", lines[1..]);
-			}
-			
-			string current_line = lines[lines.Length-1];
-			if (@event is InputEventKey keyEvent && keyEvent.Pressed) {
 
+		public override void _Input(InputEvent @event) {
+			if (@event is InputEventKey keyEvent && keyEvent.Pressed) {
 				switch (keyEvent.Keycode) {
 					case Key.Backspace:
-						if (current_line.Length > 3) {
-							this.Text = this.Text.Remove(this.Text.Length - 1);
-						}
+						this.commandUp = 0;
+
+						this.Backspace();
 						break;
 					case Key.Enter:
-						this.Print("\n");
-						string[] values = current_line.Split(" ");
-						string commandName = values[1];
-						string[] args = new string[values.Length-2];
-						if (values.Length > 2) {
-							args = values[2..];
-						}
+						int idx = this.commandHistory.Count - 1;
+						string currentCommand = this.commandHistory[idx].Item1;
+						string[] splitted = currentCommand.Split(" ");
 
-						this.ProcessCommand(commandName, args);
+						try {
+							this.commandManager.ProcessCommand(splitted[0], splitted.Length > 1 ? splitted[1..] : new string[0] {});
+						} catch (CommandManagerError er) {
+							this.PrintLn(er.Message);
+						}
+						
+						this.commandHistory.Add(("", ""));
 					
-						this.Print("?> ");
+						break;
+					case Key.Up:
+						this.commandUp = Math.Min(this.commandUp + 1, this.commandHistory.Count - 1);
+					
+						idx = this.commandHistory.Count - 1 - this.commandUp;
+						string command = this.commandHistory[idx].Item1;
+
+						this.ReplaceType(command);
+
+						break;
+					case Key.Down:
+						this.commandUp = Math.Max(1, this.commandUp - 1);
+					
+						idx = this.commandHistory.Count - 1 - this.commandUp;
+						command = this.commandHistory[idx].Item1;
+
+						this.ReplaceType(command);
 						break;
 					default:
-						this.Print(((char)keyEvent.Unicode).ToString());
+						this.commandUp = 0;
+
+						char text = (char)keyEvent.Unicode;
+						if (!char.IsControl(text)) {
+							this.Type(text.ToString());
+						}
+
 						break;
 				}
 			}
+
+			this.Flush();
 		}
-	
 	}
 }
