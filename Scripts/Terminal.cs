@@ -81,15 +81,11 @@ namespace Timekiller {
 				switch (args[0]) {
 					case "position":
 						(int system, int planet, int region, int subRegion, int plot) coords = Manager.Player.Coords;
-						var plot = ((SolarSystem)Manager.TrackedGIDObjects[coords.system])
-							.Planets[coords.planet]
-							.Regions[coords.region]
-							.SubRegions[coords.subRegion]
-							.Plots[coords.plot];
+						var plot = ((SolarSystem)Manager.TrackedGIDObjects[coords.system]).GetCoords(coords.planet, coords.region, coords.subRegion, coords.plot);
 					
 						this.PrintLn("== You ==");
 						this.PrintLn($"Coords: ({coords.system}, {coords.planet}, {coords.region}, {coords.subRegion}, {coords.plot})");
-						this.PrintLn($"System: {string.Join(", ", Manager.Systems[coords.system].Planets.Select(planet => planet.Name))}");
+						this.PrintLn($"System: {string.Join(", ", Manager.Systems[coords.system].Planets.Select(planet => planet.Value.Name))}");
 						this.PrintLn($"Plot:");
 						this.PrintLn($"\tHarvestable Count: {plot.Harvestables.Count}");
 						break;
