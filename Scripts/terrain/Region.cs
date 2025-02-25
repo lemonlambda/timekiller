@@ -10,5 +10,11 @@ namespace Timekiller.Terrain {
 			this.ID = id;
 			this.SubRegions = new SubRegion[0];
 		}
+
+		public void Tick() {
+			foreach (SubRegion subRegion in this.SubRegions) {
+				subRegion.Tick();
+			}
+		}
 	}
 }

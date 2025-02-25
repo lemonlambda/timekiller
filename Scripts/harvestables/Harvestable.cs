@@ -15,16 +15,16 @@ namespace Timekiller.Harvestables {
 
 		public Dictionary<string, float> Harvest() {
 			if (this.Stage == this.MaxStage) {
-				return self.MatureResult;
+				return this.MatureResult;
 			}
 			return new Dictionary<string, float>();
 		}
 
 		public void Tick() {
-			this.Stage += 1;
+			this.Stage = Math.Min(this.MaxStage, this.Stage + 1);
 		}
 
-		private void init(
+		public void Init(
 			string name,
 			int stage,
 			int maxStage,
@@ -35,7 +35,7 @@ namespace Timekiller.Harvestables {
 			this.Name = name;
 			this.MaxStage = maxStage;
 			this.AmbientProduction = ambientProduction;
-			this.MatuerResult = matureResult;
+			this.MatureResult = matureResult;
 		}
 
 		public Harvestable() { }

@@ -12,5 +12,11 @@ namespace Timekiller.Terrain {
 			this.Name = planetName;
 			this.Regions = new Region[0];
 		}
+
+		public void Tick() {
+			foreach (Region region in this.Regions) {
+				region.Tick();
+			}
+		}
 	}
 }

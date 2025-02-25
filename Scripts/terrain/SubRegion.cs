@@ -10,5 +10,11 @@ namespace Timekiller.Terrain {
 			this.ID = id;
 			this.Plots = new Plot[0];
 		}
+
+		public void Tick() {
+			foreach (Plot plot in this.Plots) {
+				plot.Tick();
+			}
+		}
 	}
 }

@@ -19,5 +19,11 @@ namespace Timekiller.Terrain {
 			int numberOfPlanets = planetCount ?? r.Next(1, 5);
 			this.Planets = Enumerable.Range(0, numberOfPlanets).Select(id => new Planet(id, $"{this.Name} {(char)('b' + id)}")).ToArray();
 		}
+
+		public void Tick() {
+			foreach (Planet planet in this.Planets) {
+				planet.Tick();
+			}
+		}
 	}
 }

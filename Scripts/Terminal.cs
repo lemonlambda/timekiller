@@ -61,8 +61,8 @@ namespace Timekiller {
 
 		// Construct the Text out of commandHistory
 		public void Flush() {
-			Func<(string, string), string> newline = command => (command.Item2 == "") ? "" : "\n";
-			this.Text = string.Join("", this.commandHistory.Select(command => $"?> {command.Item1}{newline(command)}{command.Item2}"));
+			Func<(string, string), string> newline = command => (command.Item2 == "") ? "\n" : "";
+			this.Text = string.Join("", this.commandHistory.Select(command => $"?> {command.Item1}\n{command.Item2}"));
 		}
 
 		public override void _Ready() {
@@ -78,8 +78,10 @@ namespace Timekiller {
 
 				switch (args[0]) {
 					case "self":
+						(int system, int planet, int region, int subRegion, int plot) player = Manager.Player.Coords;
+					
 						this.PrintLn("== You ==");
-						this.PrintLn($"Coords: You don't exist");
+						this.PrintLn($"Coords: ({player.system}, {player.planet}, {player.region}, {player.subRegion}, {player.plot})");
 						break;
 					case "solarsystem":
 						this.PrintLn($"System: {string.Join(", ", Manager.Systems[Int32.Parse(args[1])].Planets.Select(planet => planet.Name))}");
@@ -92,6 +94,9 @@ namespace Timekiller {
 			this.commandManager.RegisterCommand("exit", "Exits the terminal.", (_) => { GetTree().Quit(); }, false);
 			this.commandManager.RegisterCommand("man", "Gets help", (_) => {
 				this.PrintLn(this.commandManager.GetHelp());
+			}, true);
+			this.commandManager.RegisterCommand("tick", "Moves forward one tick.", (_) => {
+				Manager.Tick();
 			}, false);
 			this.commandHistory.Add(("", ""));
 		}
