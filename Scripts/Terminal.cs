@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using Timekiller.StateManager;
 using Timekiller.Terrain;
@@ -99,7 +100,11 @@ namespace Timekiller {
 				this.PrintLn(this.commandManager.GetHelp());
 			}, true);
 			this.commandManager.RegisterCommand("tick", "Moves forward one tick.", (_) => {
+				Stopwatch stopWatch = new Stopwatch();
+				stopWatch.Start();
 				Manager.Tick();
+				stopWatch.Stop();
+				this.PrintLn($"Tick took {stopWatch.Elapsed.TotalSeconds} seconds");
 			}, false);
 			this.commandHistory.Add(("", ""));
 		}
