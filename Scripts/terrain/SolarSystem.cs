@@ -18,6 +18,7 @@ namespace Timekiller.Terrain {
 			Random r = new Random();
 			int numberOfPlanets = planetCount ?? r.Next(1, 5);
 			this.Planets = Enumerable.Range(0, numberOfPlanets).Select(id => new Planet(id, $"{this.Name} {(char)('b' + id)}")).ToArray();
+			Manager.AddTrackedGIDObject(this.GID, this);
 		}
 
 		public void Tick() {

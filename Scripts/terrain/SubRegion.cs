@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 namespace Timekiller.Terrain {
 	public partial class SubRegion {
@@ -8,7 +9,7 @@ namespace Timekiller.Terrain {
 
 		public SubRegion(int id) {
 			this.ID = id;
-			this.Plots = new Plot[0];
+			this.Plots = Enumerable.Range(0, 35).Select(id => new Plot(id)).ToArray();
 		}
 
 		public void Tick() {

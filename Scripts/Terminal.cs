@@ -4,6 +4,8 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Timekiller.StateManager;
+using Timekiller.Terrain;
+using Timekiller.Harvestables;
 
 namespace Timekiller {
 	public partial class Terminal : RichTextLabel {
@@ -77,14 +79,19 @@ namespace Timekiller {
 				}
 
 				switch (args[0]) {
-					case "self":
-						(int system, int planet, int region, int subRegion, int plot) player = Manager.Player.Coords;
+					case "position":
+						(int system, int planet, int region, int subRegion, int plot) coords = Manager.Player.Coords;
+						var plot = ((SolarSystem)Manager.TrackedGIDObjects[coords.system])
+							.Planets[coords.planet]
+							.Regions[coords.region]
+							.SubRegions[coords.subRegion]
+							.Plots[coords.plot];
 					
 						this.PrintLn("== You ==");
-						this.PrintLn($"Coords: ({player.system}, {player.planet}, {player.region}, {player.subRegion}, {player.plot})");
-						break;
-					case "solarsystem":
-						this.PrintLn($"System: {string.Join(", ", Manager.Systems[Int32.Parse(args[1])].Planets.Select(planet => planet.Name))}");
+						this.PrintLn($"Coords: ({coords.system}, {coords.planet}, {coords.region}, {coords.subRegion}, {coords.plot})");
+						this.PrintLn($"System: {string.Join(", ", Manager.Systems[coords.system].Planets.Select(planet => planet.Name))}");
+						this.PrintLn($"Plot:");
+						this.PrintLn($"\tHarvestable Count: {plot.Harvestables.Count}");
 						break;
 					default:
 						this.PrintLn($"You can't examine {args[0]}.");

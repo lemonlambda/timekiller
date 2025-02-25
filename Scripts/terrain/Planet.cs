@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 namespace Timekiller.Terrain {
 	public partial class Planet : GodotObject {
@@ -10,7 +11,7 @@ namespace Timekiller.Terrain {
 		public Planet(int id, string planetName) {
 			this.ID = id;
 			this.Name = planetName;
-			this.Regions = new Region[0];
+			this.Regions = Enumerable.Range(0, 10).Select(id => new Region(id)).ToArray();
 		}
 
 		public void Tick() {

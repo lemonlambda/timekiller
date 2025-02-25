@@ -11,6 +11,7 @@ namespace Timekiller {
 		public User(int system, int planet, int region, int subRegion, int plot) {
 			this.gid = Manager.GetNewGID();
 			this.Coords = (system, planet, region, subRegion, plot);
+			Manager.AddTrackedGIDObject(this.gid, this);
 		}
 	}
 }
