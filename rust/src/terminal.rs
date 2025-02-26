@@ -1,18 +1,45 @@
-use godot::prelude::*;
+use crate::command_manager::CommandManager;
+
 use godot::classes::*;
 use godot::global::*;
+use godot::prelude::*;
+use std::rc::Rc;
+use std::sync::Mutex;
 
 pub trait Printer {
     /// Prints in the user type field
-    fn user_print<T: ToString>(&mut self, content: T); 
+    fn user_print<T: ToString>(&mut self, content: T);
     /// Prints with newline in the user type field
-    fn user_println<T: ToString>(&mut self, content: T); 
+    fn user_println<T: ToString>(&mut self, content: T);
     /// Prints in the command output field
     fn print<T: ToString>(&mut self, content: T);
     /// Prints with new line in the command output field
-    fn println<T: ToString>(&mut self, content: T); 
+    fn println<T: ToString>(&mut self, content: T);
     /// Constructs the command history to a readable format
     fn flush(&mut self);
+}
+
+impl<P: Printer> Printer for Rc<Mutex<P>> {
+    fn user_print<T: ToString>(&mut self, content: T) {
+        let mut locked = self.lock().unwrap();
+        locked.user_print(content);
+    }
+    fn user_println<T: ToString>(&mut self, content: T) {
+        let mut locked = self.lock().unwrap();
+        locked.user_println(content);
+    }
+    fn print<T: ToString>(&mut self, content: T) {
+        let mut locked = self.lock().unwrap();
+        locked.print(content);
+    }
+    fn println<T: ToString>(&mut self, content: T) {
+        let mut locked = self.lock().unwrap();
+        locked.println(content);
+    }
+    fn flush(&mut self) {
+        let mut locked = self.lock().unwrap();
+        locked.flush();
+    }
 }
 
 struct TerminalPrinter {
@@ -20,14 +47,14 @@ struct TerminalPrinter {
     pub command_history: Vec<(String, String)>,
 
     /// Output for flush
-    pub text: String
+    pub text: String,
 }
 
 impl TerminalPrinter {
     fn new() -> Self {
         Self {
             command_history: vec![(String::new(), String::new())],
-            text: String::new()
+            text: String::new(),
         }
     }
 }
@@ -38,23 +65,23 @@ impl Printer for TerminalPrinter {
         if self.command_history.len() < 1 {
             panic!("Command History's length is 0");
         }
-        
+
         let idx = self.command_history.len() - 1;
         self.command_history[idx].0 += &content.to_string();
-    } 
-    
+    }
+
     /// Prints with newline in the user type field
     fn user_println<T: ToString>(&mut self, content: T) {
         self.user_print(content);
         self.user_print("\n");
-    } 
+    }
 
     /// Prints in the command output field
     fn print<T: ToString>(&mut self, content: T) {
         if self.command_history.len() < 1 {
             panic!("Command History's length is 0");
         }
-        
+
         let idx = self.command_history.len() - 1;
         self.command_history[idx].1 += &content.to_string();
     }
@@ -64,61 +91,73 @@ impl Printer for TerminalPrinter {
         self.print(content);
         self.print("\n");
     }
-    
+
     /// Constructs the command history to a readable format
     fn flush(&mut self) {
-        let reconstructed = self.command_history.iter().map(|(command, output)| {
-            format!("?> {}\n{}", command, output)
-        }).fold(String::new(), |acc, history| format!("{}{}", acc, history));
+        let reconstructed = self
+            .command_history
+            .iter()
+            .map(|(command, output)| format!("?> {}\n{}", command, output))
+            .fold(String::new(), |acc, history| format!("{}{}", acc, history));
         self.text = reconstructed;
     }
 }
 
-
 #[derive(GodotClass)]
 #[class(base = RichTextLabel)]
 struct Terminal {
-    printer: TerminalPrinter,
+    printer: Rc<Mutex<TerminalPrinter>>,
+    command_manager: CommandManager<TerminalPrinter>,
 
-    base: Base<RichTextLabel>
+    base: Base<RichTextLabel>,
 }
 
 #[godot_api]
 impl IRichTextLabel for Terminal {
     fn init(base: Base<RichTextLabel>) -> Self {
+        let printer = Rc::new(Mutex::new(TerminalPrinter::new()));
         Self {
-            printer: TerminalPrinter::new(),
-            base
+            printer: printer.clone(),
+            command_manager: CommandManager::new(printer.clone()),
+            base,
         }
     }
 
+    fn ready(&mut self) {}
+
     fn input(&mut self, event: Gd<InputEvent>) {
-        if let Ok(input_event) = event.clone().try_cast::<InputEventKey>() && event.is_pressed() {
+        if let Ok(input_event) = event.clone().try_cast::<InputEventKey>()
+            && event.is_pressed()
+        {
             match input_event.get_keycode() {
                 Key::ENTER => {
-                    self.printer.command_history.push((String::new(), String::new()));
-                },
+                    let mut printer = self.printer.lock().unwrap();
+                    printer.command_history.push((String::new(), String::new()));
+                }
                 Key::BACKSPACE => {
-                    if self.printer.command_history.len() == 0 {
+                    let mut printer = self.printer.lock().unwrap();
+                    if printer.command_history.len() == 0 {
                         return;
                     }
-                    let idx = self.printer.command_history.len() - 1;
-                    self.printer.command_history[idx].0.pop();
-                },
+                    let idx = printer.command_history.len() - 1;
+                    printer.command_history[idx].0.pop();
+                }
                 _ => {
                     let character = char::from_u32(input_event.get_unicode() as u32).unwrap();
                     // prevents stupid shift and control keys from becoming real
                     if character.is_control() {
                         return;
                     }
-                    
+
                     self.printer.user_print(character);
                 }
             }
         }
-        
+
         self.printer.flush();
-        let text = self.printer.text.clone();
+        let mut printer = self.printer.lock().unwrap();
+        let text = printer.text.clone();
+        drop(printer);
         self.base_mut().set_text(&text);
     }
 }
