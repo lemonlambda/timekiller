@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://d32rduta7j6e6"]
+
+[ext_resource type="FontFile" uid="uid://bxw8t4tfxe5ud" path="res://Assets/VT323-Regular.ttf" id="1_2m5hg"]
+
+[resource]
+default_font = ExtResource("1_2m5hg")
+RichTextLabel/font_sizes/normal_font_size = 50
+RichTextLabel/fonts/normal_font = ExtResource("1_2m5hg")

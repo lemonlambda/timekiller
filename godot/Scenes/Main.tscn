@@ -37,3 +37,5 @@ offset_bottom = 1080.0
 
 [node name="Window" parent="." instance=ExtResource("3_asxpe")]
 visible = false
+
+[node name="AudioPlayer" type="AudioStreamPlayer2D" parent="."]

@@ -9,7 +9,7 @@ namespace Timekiller {
 		public CommandManagerError(string message) : base(message) {}
 	}
 
-	public partial class CommandManager : GodotObject {
+	public partial class CommandManager : Node {
 		private Dictionary<string, Action<string[]>> commands;
 		private Dictionary<string, string> commandDescriptions;
 		private int lastLength;
