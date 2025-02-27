@@ -1,10 +1,12 @@
 use crate::command_manager::CommandManager;
 use crate::helpers::Initable;
 use crate::printer::Printer;
+use crate::signals::Signals;
 use crate::state_manager::MANAGER;
 
 use godot::classes::*;
 use godot::global::*;
+use godot::obj::WithBaseField;
 use godot::prelude::*;
 use std::rc::Rc;
 use std::sync::Mutex;
@@ -76,7 +78,7 @@ struct Terminal {
     printer: Rc<Mutex<TerminalPrinter>>,
     command_manager: CommandManager<TerminalPrinter>,
 
-    signals: Initable<Gd<Node>>,
+    signals: Initable<Gd<Signals>>,
 
     base: Base<RichTextLabel>,
 }
@@ -94,8 +96,8 @@ impl IRichTextLabel for Terminal {
     }
 
     fn ready(&mut self) {
-        self.signals
-            .init(self.base().get_node_as::<Node>("/root/Signals"));
+        let signals = self.base().get_node_as::<Signals>("/root/Main/Signals");
+        self.signals.init(signals);
 
         self.command_manager
             .register_command("test", |mut printer, _| printer.println("Hello"));
@@ -111,14 +113,12 @@ impl IRichTextLabel for Terminal {
             && event.is_pressed()
         {
             // Plays keyboard type noise
-            match self.signals.emit_signal("PlayClick", &[]) {
+            match self.signals.emit_signal("play_click", &[]) {
                 Error::OK => {}
                 err => {
                     godot_error!("Signal Error: {:?}", err);
                 }
             }
-            let now = chrono::Local::now();
-            // godot_print!("Rust: {}", now.format("%Y-%m-%d %H:%M:%S%.3f"));
 
             match input_event.get_keycode() {
                 Key::ENTER => {

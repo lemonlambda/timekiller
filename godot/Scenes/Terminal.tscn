@@ -45,6 +45,7 @@ text = "OctaedroEstrelladOS [Version 2.1.253.5849]
 (c) 4036 Fractal Forge. All rights reserved.
 
 Username: "
+scroll_active = false
 
 [node name="Sprite2D" type="Sprite2D" parent="Panel"]
 position = Vector2(960, 540)
