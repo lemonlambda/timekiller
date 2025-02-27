@@ -3,6 +3,7 @@
 mod command_manager;
 mod printer;
 mod terminal;
+mod terrain;
 
 use godot::prelude::*;
 
