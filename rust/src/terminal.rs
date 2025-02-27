@@ -1,5 +1,6 @@
 use crate::command_manager::CommandManager;
 use crate::printer::Printer;
+use crate::state_manager::MANAGER;
 
 use godot::classes::*;
 use godot::global::*;
@@ -91,15 +92,23 @@ impl IRichTextLabel for Terminal {
     fn ready(&mut self) {
         self.command_manager
             .register_command("test", |mut printer, _| printer.println("Hello"));
+        self.command_manager
+            .register_command("coords", |mut printer, _| {
+                let locked = MANAGER.lock().unwrap();
+                godot_print!("Ran");
+                printer.println(format!("{:?}", locked.player.position));
+            });
     }
 
     fn input(&mut self, event: Gd<InputEvent>) {
         if let Ok(input_event) = event.clone().try_cast::<InputEventKey>()
             && event.is_pressed()
         {
+            godot_warn!("Got keyboard event");
             match input_event.get_keycode() {
                 Key::ENTER => {
-                    let mut printer = self.printer.lock().unwrap();
+                    godot_warn!("Got Enter");
+                    let printer = self.printer.lock().unwrap();
 
                     // Get the command name and args seperately
                     let idx = printer.command_history.len() - 1;
@@ -116,10 +125,16 @@ impl IRichTextLabel for Terminal {
                             vec![]
                         }
                     };
+                    drop(printer);
 
-                    match self.command_manager.process_command(current_command, args) {
+                    let command_result =
+                        self.command_manager.process_command(current_command, args);
+
+                    let mut printer = self.printer.lock().unwrap();
+                    match command_result {
                         Ok(_) => {}
                         Err(error) => {
+                            godot_warn!("Command error: {}", error);
                             printer.println(format!("{}", error));
                         }
                     }
