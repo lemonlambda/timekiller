@@ -46,6 +46,7 @@ namespace Timekiller {
 			Random random = new Random();
 			foreach (char character in content) {
 				this.Text += character.ToString();
+				GD.Print($"{nameof(Signals.PlayClick)}");
 				this.signals.EmitSignal(nameof(Signals.PlayClick));
 				await ToSignal(GetTree().CreateTimer(.2 + (random.NextDouble() * 0.1 - 0.05)), "timeout");
 			}

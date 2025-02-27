@@ -1,26 +1,12 @@
 using Godot;
 using System;
+using System.Linq;
 
 namespace Timekiller {
 	public partial class AudioPlayer : AudioStreamPlayer2D {
 		private Signals signals;
 
-		private AudioStream[] clicks = new AudioStream[] {
-			GD.Load<AudioStream>("res://Assets/Audio/click1.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click2.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click3.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click4.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click5.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click6.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click7.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click8.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click9.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click10.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click11.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click12.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click13.wav"),
-			GD.Load<AudioStream>("res://Assets/Audio/click14.wav"),
-		};
+		private AudioStream[] clicks = Enumerable.Range(0, 32).Select( id => GD.Load<AudioStream>($"res://Assets/Audio/keypress-{id:D2}.wav")).ToArray();
 		private Random random = new Random();
 
 		public override void _Ready() {
@@ -29,8 +15,10 @@ namespace Timekiller {
 		}
 
 		private void ClickSound() {
-			this.Stream = this.clicks[this.random.Next(6, clicks.Length-1)];
+			this.Stream = this.clicks[this.random.Next(0, clicks.Length-1)];
 			this.Play();
+			DateTime now = DateTime.Now; // Local time
+	        GD.Print(now.ToString("C#: yyyy-MM-dd HH:mm:ss.fff")); 
 		}
 	}
 }
