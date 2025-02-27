@@ -1,4 +1,4 @@
-use crate::terminal::Printer;
+use crate::printer::Printer;
 
 use anyhow::*;
 use std::collections::HashMap;

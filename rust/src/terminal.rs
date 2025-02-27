@@ -1,46 +1,11 @@
 use crate::command_manager::CommandManager;
+use crate::printer::Printer;
 
 use godot::classes::*;
 use godot::global::*;
 use godot::prelude::*;
 use std::rc::Rc;
 use std::sync::Mutex;
-
-pub trait Printer {
-    /// Prints in the user type field
-    fn user_print<T: ToString>(&mut self, content: T);
-    /// Prints with newline in the user type field
-    fn user_println<T: ToString>(&mut self, content: T);
-    /// Prints in the command output field
-    fn print<T: ToString>(&mut self, content: T);
-    /// Prints with new line in the command output field
-    fn println<T: ToString>(&mut self, content: T);
-    /// Constructs the command history to a readable format
-    fn flush(&mut self);
-}
-
-impl<P: Printer> Printer for Rc<Mutex<P>> {
-    fn user_print<T: ToString>(&mut self, content: T) {
-        let mut locked = self.lock().unwrap();
-        locked.user_print(content);
-    }
-    fn user_println<T: ToString>(&mut self, content: T) {
-        let mut locked = self.lock().unwrap();
-        locked.user_println(content);
-    }
-    fn print<T: ToString>(&mut self, content: T) {
-        let mut locked = self.lock().unwrap();
-        locked.print(content);
-    }
-    fn println<T: ToString>(&mut self, content: T) {
-        let mut locked = self.lock().unwrap();
-        locked.println(content);
-    }
-    fn flush(&mut self) {
-        let mut locked = self.lock().unwrap();
-        locked.flush();
-    }
-}
 
 struct TerminalPrinter {
     /// Has a format of user type input and command output
@@ -61,7 +26,7 @@ impl TerminalPrinter {
 
 impl Printer for TerminalPrinter {
     /// Prints in the user type field
-    fn user_print<T: ToString>(&mut self, content: T) {
+    fn stdin_print<T: ToString>(&mut self, content: T) {
         if self.command_history.len() < 1 {
             panic!("Command History's length is 0");
         }
@@ -71,9 +36,9 @@ impl Printer for TerminalPrinter {
     }
 
     /// Prints with newline in the user type field
-    fn user_println<T: ToString>(&mut self, content: T) {
-        self.user_print(content);
-        self.user_print("\n");
+    fn stdin_println<T: ToString>(&mut self, content: T) {
+        self.stdin_print(content);
+        self.stdin_print("\n");
     }
 
     /// Prints in the command output field
@@ -176,7 +141,7 @@ impl IRichTextLabel for Terminal {
                         return;
                     }
 
-                    self.printer.user_print(character);
+                    self.printer.stdin_print(character);
                 }
             }
         }

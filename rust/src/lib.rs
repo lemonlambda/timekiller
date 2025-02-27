@@ -1,7 +1,8 @@
 #![feature(let_chains)]
 
-mod terminal;
 mod command_manager;
+mod printer;
+mod terminal;
 
 use godot::prelude::*;
 
