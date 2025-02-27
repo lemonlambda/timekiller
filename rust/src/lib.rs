@@ -2,6 +2,7 @@
 #![feature(let_chains, const_trait_impl, core_intrinsics)]
 
 mod command_manager;
+mod helpers;
 mod printer;
 mod state_manager;
 mod terminal;
