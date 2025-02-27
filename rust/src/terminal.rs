@@ -123,7 +123,10 @@ impl IRichTextLabel for Terminal {
         }
     }
 
-    fn ready(&mut self) {}
+    fn ready(&mut self) {
+        self.command_manager
+            .register_command("test", |mut printer, _| printer.println("Hello"));
+    }
 
     fn input(&mut self, event: Gd<InputEvent>) {
         if let Ok(input_event) = event.clone().try_cast::<InputEventKey>()
@@ -132,6 +135,30 @@ impl IRichTextLabel for Terminal {
             match input_event.get_keycode() {
                 Key::ENTER => {
                     let mut printer = self.printer.lock().unwrap();
+
+                    // Get the command name and args seperately
+                    let idx = printer.command_history.len() - 1;
+                    let current_command_splitted = printer.command_history[idx]
+                        .0
+                        .split(" ")
+                        .map(|s| s.to_string())
+                        .collect::<Vec<String>>();
+                    let current_command = current_command_splitted[0].clone();
+                    let args = {
+                        if current_command_splitted.len() > 1 {
+                            current_command_splitted[1..].to_vec()
+                        } else {
+                            vec![]
+                        }
+                    };
+
+                    match self.command_manager.process_command(current_command, args) {
+                        Ok(_) => {}
+                        Err(error) => {
+                            printer.println(format!("{}", error));
+                        }
+                    }
+
                     printer.command_history.push((String::new(), String::new()));
                 }
                 Key::BACKSPACE => {
@@ -155,7 +182,7 @@ impl IRichTextLabel for Terminal {
         }
 
         self.printer.flush();
-        let mut printer = self.printer.lock().unwrap();
+        let printer = self.printer.lock().unwrap();
         let text = printer.text.clone();
         drop(printer);
         self.base_mut().set_text(&text);
