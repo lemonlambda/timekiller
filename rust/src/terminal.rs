@@ -1,4 +1,5 @@
 use crate::command_manager::CommandManager;
+use crate::helpers::Initable;
 use crate::printer::Printer;
 use crate::state_manager::MANAGER;
 
@@ -75,6 +76,8 @@ struct Terminal {
     printer: Rc<Mutex<TerminalPrinter>>,
     command_manager: CommandManager<TerminalPrinter>,
 
+    signals: Initable<Gd<Node>>,
+
     base: Base<RichTextLabel>,
 }
 
@@ -85,11 +88,15 @@ impl IRichTextLabel for Terminal {
         Self {
             printer: printer.clone(),
             command_manager: CommandManager::new(printer.clone()),
+            signals: Initable::new(),
             base,
         }
     }
 
     fn ready(&mut self) {
+        self.signals
+            .init(self.base().get_node_as::<Node>("/root/Signals"));
+
         self.command_manager
             .register_command("test", |mut printer, _| printer.println("Hello"));
         self.command_manager
@@ -103,6 +110,16 @@ impl IRichTextLabel for Terminal {
         if let Ok(input_event) = event.clone().try_cast::<InputEventKey>()
             && event.is_pressed()
         {
+            // Plays keyboard type noise
+            match self.signals.emit_signal("PlayClick", &[]) {
+                Error::OK => {}
+                err => {
+                    godot_error!("Signal Error: {:?}", err);
+                }
+            }
+            let now = chrono::Local::now();
+            // godot_print!("Rust: {}", now.format("%Y-%m-%d %H:%M:%S%.3f"));
+
             match input_event.get_keycode() {
                 Key::ENTER => {
                     let printer = self.printer.lock().unwrap();
