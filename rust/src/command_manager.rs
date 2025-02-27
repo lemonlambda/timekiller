@@ -21,12 +21,12 @@ impl<P: Printer> CommandManager<P> {
     }
 
     /// Registers a new command
-    pub fn register_command(
+    pub fn register_command<S: ToString>(
         &mut self,
-        command_name: String,
+        command_name: S,
         command: fn(MutexGuard<'_, P>, Vec<String>),
     ) {
-        self.commands.insert(command_name, command);
+        self.commands.insert(command_name.to_string(), command);
     }
 
     /// Processes a command
