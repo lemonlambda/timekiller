@@ -98,14 +98,6 @@ impl IRichTextLabel for Terminal {
     fn ready(&mut self) {
         let signals = self.base().get_node_as::<Signals>("/root/Main/Signals");
         self.signals.init(signals);
-
-        self.command_manager
-            .register_command("test", |mut printer, _| printer.println("Hello"));
-        self.command_manager
-            .register_command("coords", |mut printer, _| {
-                let locked = MANAGER.lock().unwrap();
-                printer.println(format!("{:?}", locked.player.position));
-            });
     }
 
     fn input(&mut self, event: Gd<InputEvent>) {
@@ -140,6 +132,11 @@ impl IRichTextLabel for Terminal {
                         }
                     };
                     drop(printer);
+
+                    if current_command.as_str() == "quit" {
+                        self.base_mut().get_tree().unwrap().quit();
+                        return;
+                    }
 
                     let command_result =
                         self.command_manager.process_command(current_command, args);

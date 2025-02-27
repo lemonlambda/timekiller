@@ -8,7 +8,6 @@ mod printer;
 mod signals;
 mod state_manager;
 mod terminal;
-mod terrain;
 mod user;
 
 use godot::prelude::*;

@@ -3,8 +3,20 @@
 [ext_resource type="Theme" uid="uid://bmjg2kaogr26n" path="res://Assets/DarkGrey.tres" id="1_xyi2j"]
 [ext_resource type="Theme" uid="uid://4nvubibd1vjc" path="res://Assets/LightGray.tres" id="2_ytlr2"]
 [ext_resource type="Theme" uid="uid://diin14q6q70bd" path="res://Assets/Black.tres" id="3_2aogr"]
-[ext_resource type="Script" path="res://Scripts/CloseWindow.cs" id="4_sf4dx"]
 [ext_resource type="Texture2D" uid="uid://bnqqgbwe38txj" path="res://Assets/stellatedoctahedron.png" id="5_q2dt4"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_60bmv"]
+script/source = "using Godot;
+using System;
+
+namespace Timekiller {
+	public partial class CloseWindow : Button {
+		public override void _Pressed() {
+			GetTree().Root.GetNode<Control>(\"Main/Window\").Visible = false;
+		}
+	}
+}
+"
 
 [node name="Window" type="Control"]
 z_index = 2
@@ -41,7 +53,7 @@ offset_bottom = 30.0
 theme = ExtResource("3_2aogr")
 action_mode = 0
 text = "X"
-script = ExtResource("4_sf4dx")
+script = SubResource("CSharpScript_60bmv")
 
 [node name="Sprite2D" type="Sprite2D" parent="Panel"]
 position = Vector2(960, 540)
