@@ -95,7 +95,6 @@ impl IRichTextLabel for Terminal {
         self.command_manager
             .register_command("coords", |mut printer, _| {
                 let locked = MANAGER.lock().unwrap();
-                godot_print!("Ran");
                 printer.println(format!("{:?}", locked.player.position));
             });
     }
@@ -104,10 +103,8 @@ impl IRichTextLabel for Terminal {
         if let Ok(input_event) = event.clone().try_cast::<InputEventKey>()
             && event.is_pressed()
         {
-            godot_warn!("Got keyboard event");
             match input_event.get_keycode() {
                 Key::ENTER => {
-                    godot_warn!("Got Enter");
                     let printer = self.printer.lock().unwrap();
 
                     // Get the command name and args seperately
