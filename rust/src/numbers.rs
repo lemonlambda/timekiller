@@ -4,6 +4,27 @@ use godot::obj::NewAlloc;
 use godot::prelude::*;
 use rand::prelude::*;
 
+use crate::signals::Signals;
+
+#[derive(GodotClass)]
+#[class(base = CheckBox)]
+pub struct Number {
+    #[export]
+    signals: Gd<Signals>,
+
+    base: Base<CheckBox>,
+}
+
+#[godot_api]
+impl ICheckBox for Number {
+    fn init(base: Base<CheckBox>) -> Self {
+        Self {
+            signals: Signals::new_alloc(),
+            base,
+        }
+    }
+}
+
 #[derive(GodotClass)]
 #[class(base = MarginContainer)]
 pub struct Numbers {
