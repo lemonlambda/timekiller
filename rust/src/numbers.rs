@@ -7,6 +7,9 @@ use rand::prelude::*;
 #[derive(GodotClass)]
 #[class(base = MarginContainer)]
 pub struct Numbers {
+    #[export]
+    signals: Gd<Signals>,
+
     numbers: Vec<u8>,
 
     #[export]
@@ -30,6 +33,7 @@ pub struct Numbers {
 impl IMarginContainer for Numbers {
     fn init(base: Base<MarginContainer>) -> Self {
         Self {
+            signals: Signals::new_alloc(),
             numbers: vec![],
 
             rows: 15.0,
