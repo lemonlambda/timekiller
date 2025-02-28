@@ -7,8 +7,8 @@ size = Vector2(0, 0)
 
 [resource]
 default_font = ExtResource("1_2m5hg")
-CheckBox/colors/font_color = Color(0.239216, 0.239216, 0.239216, 1)
-CheckBox/colors/font_focus_color = Color(0.237539, 0.237539, 0.237539, 1)
+CheckBox/colors/font_color = Color(0.351563, 0.351563, 0.351563, 1)
+CheckBox/colors/font_focus_color = Color(0.396889, 0.396889, 0.396889, 1)
 CheckBox/colors/font_hover_color = Color(0.239216, 0.239216, 0.239216, 1)
 CheckBox/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 CheckBox/colors/font_outline_color = Color(0, 0, 0, 1)

@@ -49,8 +49,9 @@ text = "DATA NEEDED: 10"
 scroll_active = false
 
 [node name="Numbers" type="Numbers" parent="Panel/Panel" node_paths=PackedStringArray("button", "container")]
+signals = NodePath("/root/Main/Signals")
 columns = 58.0
-button = NodePath("Panel/Number")
+button = NodePath("Panel/Number2")
 container = NodePath("Panel")
 layout_mode = 0
 offset_top = 59.0
@@ -61,16 +62,14 @@ theme = SubResource("Theme_uhtdd")
 [node name="Panel" type="Panel" parent="Panel/Panel/Numbers"]
 layout_mode = 2
 
-[node name="Number" type="CheckBox" parent="Panel/Panel/Numbers/Panel"]
+[node name="Number2" type="Number" parent="Panel/Panel/Numbers/Panel"]
+signals = NodePath("Main/Signals")
 visible = false
-z_index = 10
 layout_mode = 0
-offset_right = 28.0
-offset_bottom = 58.0
+offset_right = 24.0
+offset_bottom = 24.0
 theme = ExtResource("4_wswaa")
 text = "0"
-alignment = 1
-icon_alignment = 1
 
 [node name="Button" type="Button" parent="Panel"]
 layout_mode = 1
