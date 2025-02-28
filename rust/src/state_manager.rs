@@ -2,7 +2,7 @@ use fragile::Fragile;
 use lazy_static::lazy_static;
 use std::{collections::HashMap, intrinsics::size_of, ptr::slice_from_raw_parts, sync::Mutex};
 
-use crate::user::User;
+use crate::{case::Case, user::User};
 
 static GIDC: Mutex<u64> = Mutex::new(0);
 lazy_static! {
@@ -59,12 +59,14 @@ impl Gid {
 /// Manages all the global state for the game
 pub struct StateManager {
     pub player: User,
+    pub case: Case,
 }
 
 impl StateManager {
     pub fn new() -> Self {
         Self {
             player: User::new(),
+            case: Case::new(),
         }
     }
 }

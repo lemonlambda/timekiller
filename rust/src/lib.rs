@@ -1,6 +1,7 @@
 #![allow(internal_features)]
 #![feature(let_chains, const_trait_impl, core_intrinsics)]
 
+mod case;
 mod click_audio;
 mod command_manager;
 mod helpers;
