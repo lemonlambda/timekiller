@@ -1,22 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://cxp6i78m0uy4g"]
+[gd_scene load_steps=8 format=3 uid="uid://cxp6i78m0uy4g"]
 
 [ext_resource type="Theme" uid="uid://bmjg2kaogr26n" path="res://Assets/DarkGrey.tres" id="1_xyi2j"]
 [ext_resource type="Theme" uid="uid://4nvubibd1vjc" path="res://Assets/LightGray.tres" id="2_ytlr2"]
 [ext_resource type="Theme" uid="uid://diin14q6q70bd" path="res://Assets/Black.tres" id="3_2aogr"]
+[ext_resource type="Theme" uid="uid://tfenvwydxint" path="res://Assets/10pxMargin.tres" id="3_w3814"]
+[ext_resource type="Theme" uid="uid://d32rduta7j6e6" path="res://Assets/TerminalTheme.tres" id="4_wswaa"]
 [ext_resource type="Texture2D" uid="uid://bnqqgbwe38txj" path="res://Assets/stellatedoctahedron.png" id="5_q2dt4"]
 
-[sub_resource type="CSharpScript" id="CSharpScript_60bmv"]
-script/source = "using Godot;
-using System;
-
-namespace Timekiller {
-	public partial class CloseWindow : Button {
-		public override void _Pressed() {
-			GetTree().Root.GetNode<Control>(\"Main/Window\").Visible = false;
-		}
-	}
-}
-"
+[sub_resource type="Theme" id="Theme_uhtdd"]
+MarginContainer/constants/margin_left = 5
+MarginContainer/constants/margin_right = 5
 
 [node name="Window" type="Control"]
 z_index = 2
@@ -43,6 +36,42 @@ offset_right = 1840.0
 offset_bottom = 1000.0
 theme = ExtResource("2_ytlr2")
 
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Panel"]
+layout_mode = 0
+offset_right = 1810.0
+offset_bottom = 76.0
+theme = ExtResource("3_w3814")
+
+[node name="DataNeeded" type="RichTextLabel" parent="Panel/Panel/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("4_wswaa")
+text = "DATA NEEDED: 10"
+scroll_active = false
+
+[node name="Numbers" type="Numbers" parent="Panel/Panel" node_paths=PackedStringArray("button", "container")]
+columns = 58.0
+button = NodePath("Panel/Number")
+container = NodePath("Panel")
+layout_mode = 0
+offset_top = 59.0
+offset_right = 1810.0
+offset_bottom = 970.0
+theme = SubResource("Theme_uhtdd")
+
+[node name="Panel" type="Panel" parent="Panel/Panel/Numbers"]
+layout_mode = 2
+
+[node name="Number" type="CheckBox" parent="Panel/Panel/Numbers/Panel"]
+visible = false
+z_index = 10
+layout_mode = 0
+offset_right = 28.0
+offset_bottom = 58.0
+theme = ExtResource("4_wswaa")
+text = "0"
+alignment = 1
+icon_alignment = 1
+
 [node name="Button" type="Button" parent="Panel"]
 layout_mode = 1
 anchors_preset = -1
@@ -53,8 +82,8 @@ offset_bottom = 30.0
 theme = ExtResource("3_2aogr")
 action_mode = 0
 text = "X"
-script = SubResource("CSharpScript_60bmv")
 
 [node name="Sprite2D" type="Sprite2D" parent="Panel"]
+modulate = Color(1, 1, 1, 0.117647)
 position = Vector2(960, 540)
 texture = ExtResource("5_q2dt4")

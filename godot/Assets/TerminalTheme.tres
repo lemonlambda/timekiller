@@ -1,8 +1,31 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://d32rduta7j6e6"]
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://d32rduta7j6e6"]
 
 [ext_resource type="FontFile" uid="uid://bxw8t4tfxe5ud" path="res://Assets/VT323-Regular.ttf" id="1_2m5hg"]
 
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_82bh3"]
+size = Vector2(0, 0)
+
 [resource]
 default_font = ExtResource("1_2m5hg")
+CheckBox/colors/font_color = Color(0.239216, 0.239216, 0.239216, 1)
+CheckBox/colors/font_focus_color = Color(0.237539, 0.237539, 0.237539, 1)
+CheckBox/colors/font_hover_color = Color(0.239216, 0.239216, 0.239216, 1)
+CheckBox/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_outline_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_pressed_color = Color(0, 0, 0, 1)
+CheckBox/colors/icon_focus_color = Color(0, 0, 0, 1)
+CheckBox/colors/icon_hover_color = Color(0, 0, 0, 1)
+CheckBox/colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+CheckBox/colors/icon_normal_color = Color(0, 0, 0, 1)
+CheckBox/colors/icon_pressed_color = Color(0, 0, 0, 1)
+CheckBox/font_sizes/font_size = 50
+CheckBox/icons/checked = SubResource("PlaceholderTexture2D_82bh3")
+CheckBox/icons/checked_disabled = SubResource("PlaceholderTexture2D_82bh3")
+CheckBox/icons/radio_checked = SubResource("PlaceholderTexture2D_82bh3")
+CheckBox/icons/radio_checked_disabled = SubResource("PlaceholderTexture2D_82bh3")
+CheckBox/icons/radio_unchecked = SubResource("PlaceholderTexture2D_82bh3")
+CheckBox/icons/radio_unchecked_disabled = SubResource("PlaceholderTexture2D_82bh3")
+CheckBox/icons/unchecked = SubResource("PlaceholderTexture2D_82bh3")
+CheckBox/icons/unchecked_disabled = SubResource("PlaceholderTexture2D_82bh3")
 RichTextLabel/font_sizes/normal_font_size = 50
 RichTextLabel/fonts/normal_font = ExtResource("1_2m5hg")

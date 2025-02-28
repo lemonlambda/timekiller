@@ -39,6 +39,7 @@ grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="Terminal" type="Terminal" parent="Panel/MarginContainer"]
+z_index = 1
 layout_mode = 2
 theme = ExtResource("2_s8v2l")
 text = "OctaedroEstrelladOS [Version 2.1.253.5849]
