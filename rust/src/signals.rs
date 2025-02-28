@@ -10,6 +10,11 @@ pub struct Signals {
 
 #[godot_api]
 impl Signals {
+    // Signals for terminal
     #[signal]
     fn play_click();
+
+    // Signals for numbers
+    #[signal]
+    fn number_pressed(id: i64, value: u8);
 }
