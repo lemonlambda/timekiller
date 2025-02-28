@@ -18,6 +18,12 @@ impl<T> Initable<T> {
     }
 }
 
+impl<T> Default for Initable<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<T> Deref for Initable<T> {
     type Target = T;
 
